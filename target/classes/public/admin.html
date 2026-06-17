@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Pedidos</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    .orders { max-width:900px; margin:20px auto; }
+    .order { padding:12px; border-radius:8px; background:#fff; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center }
+    .order .meta { max-width:70%; }
+    .order pre { margin:0; font-size:13px }
+    .status-select { padding:6px 8px; border-radius:6px }
+  </style>
+</head>
+<body>
+  <div class="center">
+    <div class="card orders">
+      <h2>Pedidos</h2>
+      <div id="orders"></div>
+    </div>
+  </div>
+  <script>
+    function fetchJSON(url, opts){ return fetch(url, opts).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }); }
+    function renderOrders(){
+      fetchJSON('/api/orders').then(function(list){
+        var container = document.getElementById('orders'); container.innerHTML='';
+        if(!list || list.length===0){ container.innerHTML='<p>Nenhum pedido</p>'; return; }
+        list.forEach(function(o){
+          var div = document.createElement('div'); div.className='order';
+          var meta = document.createElement('div'); meta.className='meta';
+          var title = document.createElement('div'); title.innerHTML = '<strong>Pedido #' + o.orderId + ' - R$ ' + (o.total||0).toFixed(2) + '</strong>';
+          var items = document.createElement('pre'); items.textContent = o.items.map(function(ci){ return ci.item.name + ' x ' + ci.qty; }).join('\n');
+          meta.appendChild(title); meta.appendChild(items);
+          var controls = document.createElement('div');
+          var sel = document.createElement('select'); sel.className='status-select';
+          ['Concluído','Em preparo','Pronto','Entregue','Cancelado'].forEach(function(s){
+            var opt = document.createElement('option'); opt.value=s; opt.textContent=s; if(o.status===s) opt.selected=true; sel.appendChild(opt);
+          });
+          sel.addEventListener('change', function(){
+            fetchJSON('/api/orders/' + o.orderId, { method: 'PUT', headers:{ 'Content-Type':'application/json'}, body: JSON.stringify({ status: sel.value }) }).then(function(updated){
+              renderOrders();
+            }).catch(function(e){ alert('Erro: '+e.message); });
+          });
+          controls.appendChild(sel);
+          div.appendChild(meta); div.appendChild(controls);
+          container.appendChild(div);
+        });
+      }).catch(function(e){ console.error(e); document.getElementById('orders').innerHTML='<p>Erro ao carregar pedidos</p>' });
+    }
+    document.addEventListener('DOMContentLoaded', function(){ renderOrders(); setInterval(renderOrders, 5000); });
+  </script>
+</body>
+</html>

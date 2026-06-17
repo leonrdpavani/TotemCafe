@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pagamento - Totem Café</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">Totem Café</div>
+    <div>
+      <a class="btn small" href="/menu.html">Menu</a>
+      <a class="btn small" href="/cart.html" style="margin-left:8px">Carrinho</a>
+    </div>
+  </header>
+
+  <main id="payment" style="max-width:1100px;margin:20px auto;display:grid;grid-template-columns:1fr 360px;gap:20px;padding:0 16px">
+    <section>
+      <div class="card">
+        <h2 style="margin-top:0">Resumo do Pedido</h2>
+        <div id="summary">
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card" style="text-align:center">
+        <h3>Pagamento</h3>
+        <!-- removido formulário de dados do cartão conforme solicitado -->
+        <div style="margin-top:18px">
+          <button class="btn big" id="payNow" type="button">Pagar agora</button>
+        </div>
+        <a class="link" href="/cart.html">Voltar ao Carrinho</a>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
