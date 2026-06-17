@@ -1,5 +1,6 @@
 Totem Café — Projeto de Totem de Autoatendimento
 ================================================
+→ Realizado em: Dezembro de 2025.
 
 Descrição
 ---------
